@@ -3,7 +3,7 @@ package main
 import(
 	"github.com/go-chi/chi"
 	"log"
-	"net/htpp"
+	"net/http"
 )
 
 func main(){
@@ -16,7 +16,8 @@ func main(){
 	router.Get("/api/{parameter}", GetWithParamHandler)
 	router.Post("/api/add", PostHandler)
 
-	err := http.ListenAndServe(":8080", router); err != nil {
+	err := http.ListenAndServe(":8080", router)
+	if err != nil {
 		log.Println(err)
 	}
 
@@ -26,7 +27,8 @@ func main(){
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	_, err := w.Write([]byte("Hello from Chi Router !")); err != nil {
+	_, err := w.Write([]byte("Hello from Chi Router !"))
+	if err != nil {
 		log.Println(err)
 	}
 
@@ -37,7 +39,8 @@ func GetWithParamHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	param := chi.URLParam(r, "parameter")
-	_, err := w.Write([]byte("Hello with parameter: " + param)); err != nil {
+	_, err := w.Write([]byte("Hello with parameter: " + param))
+	if err != nil {
 		log.Println(err)
 	}
 }
@@ -46,15 +49,16 @@ func GetWithParamHandler(w http.ResponseWriter, r *http.Request) {
 func PostHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	_, err := w.Write([]byte("Hello from Chi Router [POST] !")); err != nil {
+	_, err := w.Write([]byte("Hello from Chi Router [POST] !"))
+	if err != nil {
 		log.Println(err)
 	}	
 }
 
 // Chi Middleware
 func Logger(handler http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Println(r.URL.Path)
 		handler.ServeHTTP(w, r)
-	}
+	})
 }
